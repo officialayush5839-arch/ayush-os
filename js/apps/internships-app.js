@@ -30,19 +30,44 @@ window.InternshipsApp = {
     this.state.error = null;
     this.render();
 
+    // 1. Try Express API endpoint
     try {
       const res = await fetch('/api/internships');
-      if (!res.ok) throw new Error(`HTTP ${res.status}: Failed to load career files.`);
-      const data = await res.json();
-      this.state.internships = data.internships || [];
-      this.state.loading = false;
-      this.render();
-    } catch (err) {
-      console.error('[InternshipsApp] Error:', err);
-      this.state.loading = false;
-      this.state.error = err.message || 'Unable to connect to Career File System.';
-      this.render();
+      if (res.ok) {
+        const data = await res.json();
+        this.state.internships = data.internships || [];
+        this.state.loading = false;
+        this.render();
+        return;
+      }
+    } catch {
+      // Server offline / static host
     }
+
+    // 2. Static JSON fallback for GitHub Pages
+    try {
+      const staticRes = await fetch('./data/internships/records.json');
+      if (staticRes.ok) {
+        const staticData = await staticRes.json();
+        const docs = staticData.documents || [];
+        this.state.internships = (staticData.internships || []).map(item => ({
+          ...item,
+          documents: docs.filter(d => d.internshipId === item.id).map(d => ({
+            ...d,
+            url: `./data/internships/documents/${d.diskFilename}`
+          }))
+        }));
+        this.state.loading = false;
+        this.render();
+        return;
+      }
+    } catch (staticErr) {
+      console.warn('[InternshipsApp] Static fallback error:', staticErr);
+    }
+
+    this.state.loading = false;
+    this.state.error = 'Unable to connect to Career File System.';
+    this.render();
   },
 
   async openDetail(id) {
@@ -51,17 +76,31 @@ window.InternshipsApp = {
 
     try {
       const res = await fetch(`/api/internships/${encodeURIComponent(id)}`);
-      if (!res.ok) throw new Error('Could not retrieve career file detail.');
-      const data = await res.json();
-      this.state.activeInternship = data.internship;
+      if (res.ok) {
+        const data = await res.json();
+        this.state.activeInternship = data.internship;
+        this.state.view = 'detail';
+        this.state.loading = false;
+        this.render();
+        return;
+      }
+    } catch {
+      // Server offline
+    }
+
+    // Fallback to loaded memory state
+    const found = (this.state.internships || []).find(i => i.id === id);
+    if (found) {
+      this.state.activeInternship = found;
       this.state.view = 'detail';
       this.state.loading = false;
       this.render();
-    } catch (err) {
-      this.state.loading = false;
-      this.state.error = err.message;
-      this.render();
+      return;
     }
+
+    this.state.loading = false;
+    this.state.error = 'Could not retrieve career file detail.';
+    this.render();
   },
 
   openDocViewer(docId) {

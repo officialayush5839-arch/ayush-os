@@ -116,21 +116,89 @@ window.ProjectsExplorerApp = {
     this.state.error = null;
     this.render();
 
+    // 1. Primary: Query Express server endpoint if available
     try {
       const res = await fetch('/api/projects');
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}: Failed to load projects from GitHub API.`);
+      if (res.ok) {
+        const data = await res.json();
+        if (Array.isArray(data.projects) && data.projects.length > 0) {
+          this.state.projects = data.projects;
+          this.state.loading = false;
+          this.render();
+          return;
+        }
       }
-      const data = await res.json();
-      this.state.projects = Array.isArray(data.projects) ? data.projects : [];
-      this.state.loading = false;
-      this.render();
-    } catch (err) {
-      console.error('[ProjectsApp] fetchProjects error:', err);
-      this.state.loading = false;
-      this.state.error = err.message || 'Unable to retrieve repository data.';
-      this.render();
+    } catch {
+      // Server endpoint not reachable (static host)
     }
+
+    // 2. Secondary: Direct GitHub Public API (Works 24/7 on static hosts like GitHub Pages)
+    try {
+      const ghRes = await fetch('https://api.github.com/users/officialayush5839-arch/repos?sort=pushed&direction=desc&per_page=100');
+      if (ghRes.ok) {
+        const repos = await ghRes.json();
+        if (Array.isArray(repos) && repos.length > 0) {
+          this.state.projects = repos.map(r => ({
+            id: String(r.id),
+            githubId: r.id,
+            name: r.name,
+            fullName: r.full_name,
+            owner: r.owner ? r.owner.login : 'officialayush5839-arch',
+            description: r.description,
+            htmlUrl: r.html_url,
+            cloneUrl: r.clone_url,
+            visibility: r.visibility || (r.private ? 'private' : 'public'),
+            isPrivate: Boolean(r.private),
+            defaultBranch: r.default_branch || 'main',
+            language: r.language,
+            topics: r.topics || [],
+            stars: r.stargazers_count || 0,
+            forks: r.forks_count || 0,
+            openIssues: r.open_issues_count || 0,
+            createdAt: r.created_at,
+            updatedAt: r.updated_at,
+            pushedAt: r.pushed_at,
+            projectImage: `assets/projects/${r.name.toLowerCase()}.png`
+          }));
+          this.state.loading = false;
+          this.render();
+          return;
+        }
+      }
+    } catch (ghErr) {
+      console.warn('[ProjectsApp] Direct GitHub fetch failed:', ghErr.message);
+    }
+
+    // 3. Tertiary: Fallback to ownerProfile canonical project registry
+    if (window.ownerProfile && Array.isArray(window.ownerProfile.projects) && window.ownerProfile.projects.length > 0) {
+      this.state.projects = window.ownerProfile.projects.map(p => ({
+        id: p.id,
+        name: p.title || p.name,
+        fullName: `officialayush5839-arch/${p.name || p.title}`,
+        owner: 'officialayush5839-arch',
+        description: p.description || p.tagline,
+        htmlUrl: p.repo || `https://github.com/officialayush5839-arch/${p.title}`,
+        cloneUrl: (p.repo || `https://github.com/officialayush5839-arch/${p.title}`) + '.git',
+        visibility: 'public',
+        isPrivate: false,
+        defaultBranch: 'main',
+        language: (p.tech && p.tech[0]) || 'Python',
+        topics: p.tech || [],
+        stars: 0,
+        forks: 0,
+        openIssues: 0,
+        createdAt: '2026-08-01T00:00:00Z',
+        updatedAt: '2026-08-30T00:00:00Z',
+        pushedAt: '2026-08-30T00:00:00Z'
+      }));
+      this.state.loading = false;
+      this.render();
+      return;
+    }
+
+    this.state.loading = false;
+    this.state.error = 'Unable to retrieve repository data.';
+    this.render();
   },
 
   async refreshProjects() {
@@ -139,12 +207,10 @@ window.ProjectsExplorerApp = {
     try {
       await fetch('/api/projects/refresh', { method: 'POST' });
       await this.fetchGitHubStatus();
-      await this.fetchProjects();
-    } catch (err) {
-      this.state.loading = false;
-      this.state.error = err.message;
-      this.render();
+    } catch {
+      // Non-server fallback
     }
+    await this.fetchProjects();
   },
 
   async openProjectReadme(project) {
@@ -157,31 +223,47 @@ window.ProjectsExplorerApp = {
 
     try {
       const res = await fetch(`/api/projects/${encodeURIComponent(project.id)}/readme`);
-      if (res.status === 403) {
-        const errData = await res.json();
-        this.state.readmeError = errData.message || 'Private repository access requires GitHub authorization.';
-        this.state.readmeLoading = false;
-        this.render();
-        return;
+      if (res.ok) {
+        const data = await res.json();
+        if (data.readme) {
+          this.state.readmeData = data.readme;
+          this.state.readmeLoading = false;
+          this.render();
+          return;
+        }
       }
-
-      if (!res.ok) {
-        throw new Error(`HTTP ${res.status}: Could not load README.`);
-      }
-
-      const data = await res.json();
-      if (data.error === 'README_NOT_FOUND' || !data.readme) {
-        this.state.readmeError = 'This repository does not currently contain a readable README.md.';
-      } else {
-        this.state.readmeData = data.readme;
-      }
-      this.state.readmeLoading = false;
-      this.render();
-    } catch (err) {
-      this.state.readmeLoading = false;
-      this.state.readmeError = err.message || 'README unavailable.';
-      this.render();
+    } catch {
+      // Server route unavailable
     }
+
+    // Direct GitHub README fallback
+    try {
+      const owner = project.owner || 'officialayush5839-arch';
+      const repo = project.name;
+      const ghRes = await fetch(`https://api.github.com/repos/${owner}/${repo}/readme`);
+      if (ghRes.ok) {
+        const ghData = await ghRes.json();
+        if (ghData.content) {
+          const cleanBase64 = ghData.content.replace(/\s/g, '');
+          const binaryStr = atob(cleanBase64);
+          const bytes = new Uint8Array(binaryStr.length);
+          for (let i = 0; i < binaryStr.length; i++) {
+            bytes[i] = binaryStr.charCodeAt(i);
+          }
+          const decoded = new TextDecoder('utf-8').decode(bytes);
+          this.state.readmeData = decoded;
+          this.state.readmeLoading = false;
+          this.render();
+          return;
+        }
+      }
+    } catch (e) {
+      console.warn('[ProjectsApp] Direct README fetch failed:', e.message);
+    }
+
+    this.state.readmeLoading = false;
+    this.state.readmeError = 'This repository does not currently contain a readable README.md.';
+    this.render();
   },
 
   openConnectFlow() {
