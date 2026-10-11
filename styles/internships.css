@@ -1,0 +1,746 @@
+/* =========================================================
+   AYUSH.OS - INTERNSHIPS.EXE (CAREER FILE SYSTEM)
+   Document-Driven, Evidence-Backed Career Archive
+   ========================================================= */
+
+.internships-app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  background: var(--sand, #fdfbf7);
+  color: var(--ink, #17131b);
+  font-family: var(--mono, 'DM Mono', monospace);
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+/* ---------- Top OS Toolbar ---------- */
+.internships-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 16px;
+  background: #fff;
+  border-bottom: 2px solid var(--ink, #17131b);
+  z-index: 10;
+}
+
+.internships-toolbar-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.internships-brand-badge {
+  font: 11px/1 var(--pixel, 'Silkscreen', monospace);
+  font-weight: 700;
+  background: var(--ink, #17131b);
+  color: #fff;
+  padding: 6px 10px;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.internships-brand-badge .pulse-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #34d399;
+  box-shadow: 0 0 6px #34d399;
+}
+
+.internships-filter-group {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.internships-chip {
+  padding: 5px 10px;
+  font: 10px/1.2 var(--mono, monospace);
+  background: #f3f4f6;
+  border: 1px solid var(--ink, #17131b);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.12s ease;
+}
+
+.internships-chip:hover {
+  background: #e5e7eb;
+}
+
+.internships-chip.active {
+  background: var(--wine, #851c3d);
+  color: #fff;
+  border-color: var(--ink, #17131b);
+  box-shadow: 2px 2px 0 var(--ink, #17131b);
+}
+
+.internships-toolbar-right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.internships-view-btn {
+  padding: 5px 10px;
+  font: 10px/1 var(--pixel, monospace);
+  background: #fff;
+  border: 1px solid var(--ink, #17131b);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.internships-view-btn.active {
+  background: var(--ink, #17131b);
+  color: #fff;
+}
+
+.internships-action-btn {
+  padding: 5px 12px;
+  font: 10px/1 var(--pixel, monospace);
+  background: var(--wine, #851c3d);
+  color: #fff;
+  border: 1px solid var(--ink, #17131b);
+  box-shadow: 2px 2px 0 var(--ink, #17131b);
+  cursor: pointer;
+  transition: transform 0.1s ease;
+}
+
+.internships-action-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink, #17131b);
+}
+
+/* ---------- Main Scroll Area ---------- */
+.internships-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  background: #f9f8f4;
+}
+
+/* ---------- Grid of Career Cards ---------- */
+.internships-cards-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+}
+
+.internship-card {
+  background: #fff;
+  border: 2px solid var(--ink, #17131b);
+  box-shadow: 4px 4px 0 var(--ink, #17131b);
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  position: relative;
+}
+
+.internship-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 6px 6px 0 var(--wine, #851c3d);
+}
+
+.internship-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.company-badge-emblem {
+  width: 38px;
+  height: 38px;
+  border: 2px solid var(--ink, #17131b);
+  background: var(--cream, #fff6ee);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 14px/1 var(--pixel, monospace);
+  font-weight: 700;
+  color: var(--wine, #851c3d);
+  flex-shrink: 0;
+}
+
+.internship-status-pill {
+  font: 9px/1.2 var(--pixel, monospace);
+  padding: 4px 8px;
+  border: 1px solid var(--ink, #17131b);
+  font-weight: 700;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.internship-status-pill.completed {
+  background: #dcfce7;
+  color: #166534;
+  border-color: #166534;
+}
+
+.internship-status-pill.current {
+  background: #e0f2fe;
+  color: #0369a1;
+  border-color: #0369a1;
+  animation: borderPulse 2s infinite ease-in-out;
+}
+
+@keyframes borderPulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(3, 105, 161, 0.4); }
+  50% { box-shadow: 0 0 0 3px rgba(3, 105, 161, 0.2); }
+}
+
+.internship-card-company {
+  font: 14px/1.3 var(--sans, system-ui, sans-serif);
+  font-weight: 800;
+  color: var(--ink, #17131b);
+  margin: 0 0 4px 0;
+}
+
+.internship-card-role {
+  font: 12px/1.4 var(--mono, monospace);
+  color: var(--wine, #851c3d);
+  font-weight: 600;
+  margin: 0 0 10px 0;
+}
+
+.internship-card-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  padding: 10px 0;
+  border-top: 1px dashed #d1d5db;
+  border-bottom: 1px dashed #d1d5db;
+  margin-bottom: 12px;
+  font-size: 11px;
+}
+
+.meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.meta-label {
+  color: #6b7280;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.meta-val {
+  font-weight: 600;
+  color: var(--ink, #17131b);
+}
+
+.internship-card-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 10px;
+}
+
+.docs-count-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  background: #f3f4f6;
+  padding: 3px 6px;
+  border: 1px solid #d1d5db;
+  font-weight: 600;
+}
+
+.open-file-hint {
+  font: 9px/1 var(--pixel, monospace);
+  color: var(--wine, #851c3d);
+  font-weight: 700;
+}
+
+/* ---------- Timeline View ---------- */
+.internships-timeline-container {
+  max-width: 780px;
+  margin: 0 auto;
+  position: relative;
+  padding: 20px 0 40px 30px;
+}
+
+.timeline-line {
+  position: absolute;
+  left: 12px;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: repeating-linear-gradient(
+    to bottom,
+    var(--ink, #17131b),
+    var(--ink, #17131b) 8px,
+    transparent 8px,
+    transparent 14px
+  );
+}
+
+.timeline-node {
+  position: relative;
+  margin-bottom: 30px;
+}
+
+.timeline-node-dot {
+  position: absolute;
+  left: -24px;
+  top: 12px;
+  width: 14px;
+  height: 14px;
+  border: 3px solid var(--ink, #17131b);
+  background: #fff;
+  border-radius: 50%;
+}
+
+.timeline-node.completed .timeline-node-dot {
+  background: #16a34a;
+}
+
+.timeline-node.current .timeline-node-dot {
+  background: #0284c7;
+  box-shadow: 0 0 8px #0284c7;
+}
+
+.timeline-card {
+  background: #fff;
+  border: 2px solid var(--ink, #17131b);
+  box-shadow: 3px 3px 0 var(--ink, #17131b);
+  padding: 14px 18px;
+  cursor: pointer;
+  transition: transform 0.12s ease;
+}
+
+.timeline-card:hover {
+  transform: translateX(4px);
+  border-color: var(--wine, #851c3d);
+}
+
+/* ---------- Detail View / Career File Inspector ---------- */
+.internship-detail-view {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  background: #fff;
+}
+
+.detail-nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--cream, #fff6ee);
+  border-bottom: 2px solid var(--ink, #17131b);
+}
+
+.detail-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font: 11px/1 var(--pixel, monospace);
+}
+
+.bc-back-btn {
+  background: transparent;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  color: var(--wine, #851c3d);
+  padding: 4px 6px;
+}
+
+.bc-back-btn:hover {
+  background: #fee2e2;
+}
+
+.detail-header-banner {
+  padding: 20px;
+  background: #fff;
+  border-bottom: 1px solid #e5e7eb;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.detail-title-group h2 {
+  font: 20px/1.2 var(--sans, system-ui);
+  font-weight: 800;
+  margin: 0 0 6px 0;
+  color: var(--ink, #17131b);
+}
+
+.detail-title-group .role-tag {
+  font: 13px/1.4 var(--mono, monospace);
+  color: var(--wine, #851c3d);
+  font-weight: 700;
+}
+
+.detail-header-actions {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.detail-body-scroll {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.detail-section {
+  margin-bottom: 24px;
+}
+
+.detail-section-title {
+  font: 11px/1 var(--pixel, monospace);
+  letter-spacing: 0.8px;
+  text-transform: uppercase;
+  color: var(--ink, #17131b);
+  margin-bottom: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.detail-section-title::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: #e5e7eb;
+}
+
+/* Fact Grid */
+.detail-facts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 12px;
+}
+
+.fact-box {
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+  padding: 10px 12px;
+}
+
+.fact-box-label {
+  font-size: 10px;
+  color: #6b7280;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+  letter-spacing: 0.5px;
+}
+
+.fact-box-value {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink, #17131b);
+  word-break: break-word;
+}
+
+/* Responsibilities list */
+.responsibilities-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.responsibilities-list li {
+  position: relative;
+  padding-left: 20px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: #374151;
+}
+
+.responsibilities-list li::before {
+  content: '▸';
+  position: absolute;
+  left: 0;
+  color: var(--wine, #851c3d);
+  font-weight: bold;
+}
+
+/* Evidence Matrix Table */
+.evidence-table-wrap {
+  overflow-x: auto;
+  border: 1px solid var(--ink, #17131b);
+  background: #fff;
+}
+
+.evidence-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 11px;
+  text-align: left;
+}
+
+.evidence-table th {
+  background: var(--ink, #17131b);
+  color: #fff;
+  padding: 8px 12px;
+  font: 10px/1.2 var(--pixel, monospace);
+  text-transform: uppercase;
+}
+
+.evidence-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #e5e7eb;
+  color: #374151;
+}
+
+.evidence-table tr:hover td {
+  background: #fdf2f4;
+}
+
+.evidence-level-badge {
+  display: inline-block;
+  font: 9px/1 var(--pixel, monospace);
+  padding: 3px 6px;
+  border: 1px solid;
+  font-weight: 700;
+}
+
+.evidence-level-badge.verified {
+  background: #dcfce7;
+  color: #15803d;
+  border-color: #15803d;
+}
+
+.evidence-level-badge.derived {
+  background: #fef3c7;
+  color: #b45309;
+  border-color: #b45309;
+}
+
+/* Document Cards Drawer */
+.documents-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 14px;
+}
+
+.document-item-card {
+  background: #fff;
+  border: 2px solid var(--ink, #17131b);
+  box-shadow: 3px 3px 0 var(--ink, #17131b);
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.doc-type-tag {
+  font: 9px/1.2 var(--pixel, monospace);
+  background: #f3f4f6;
+  border: 1px solid #9ca3af;
+  padding: 3px 6px;
+  display: inline-block;
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+
+.doc-filename {
+  font-size: 11px;
+  font-weight: 700;
+  word-break: break-all;
+  margin-bottom: 8px;
+}
+
+.doc-hash-preview {
+  font-size: 9px;
+  color: #6b7280;
+  margin-bottom: 12px;
+  font-family: monospace;
+}
+
+.doc-view-btn {
+  width: 100%;
+  padding: 7px 10px;
+  background: var(--ink, #17131b);
+  color: #fff;
+  border: 1px solid var(--ink, #17131b);
+  font: 10px/1 var(--pixel, monospace);
+  cursor: pointer;
+  text-align: center;
+  transition: all 0.12s ease;
+}
+
+.doc-view-btn:hover {
+  background: var(--wine, #851c3d);
+}
+
+/* ---------- Document Viewer Modal ---------- */
+.doc-viewer-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(23, 19, 27, 0.82);
+  z-index: 10000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.doc-viewer-window {
+  width: 95%;
+  max-width: 1050px;
+  height: 90vh;
+  background: #fff;
+  border: 3px solid var(--ink, #17131b);
+  box-shadow: 8px 8px 0 rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.doc-viewer-titlebar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: var(--ink, #17131b);
+  color: #fff;
+  font: 11px/1 var(--pixel, monospace);
+}
+
+.doc-viewer-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 14px;
+  background: #f3f4f6;
+  border-bottom: 2px solid var(--ink, #17131b);
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.zoom-controls {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.zoom-btn {
+  padding: 4px 8px;
+  background: #fff;
+  border: 1px solid var(--ink, #17131b);
+  font: 11px/1 var(--mono, monospace);
+  cursor: pointer;
+  font-weight: 700;
+}
+
+.doc-viewer-split {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+}
+
+.doc-canvas-container {
+  flex: 1;
+  background: #374151;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: auto;
+  padding: 20px;
+  position: relative;
+}
+
+.doc-image-preview {
+  max-width: 100%;
+  max-height: 100%;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+  border: 1px solid #6b7280;
+  transition: transform 0.15s ease-out;
+  transform-origin: center center;
+}
+
+.doc-evidence-sidebar {
+  width: 320px;
+  background: #fdfbf7;
+  border-left: 2px solid var(--ink, #17131b);
+  overflow-y: auto;
+  padding: 16px;
+  font-size: 11px;
+}
+
+.doc-evidence-sidebar h4 {
+  font: 11px/1 var(--pixel, monospace);
+  margin: 0 0 12px 0;
+  text-transform: uppercase;
+}
+
+.doc-fact-card {
+  background: #fff;
+  border: 1px solid #d1d5db;
+  padding: 8px 10px;
+  margin-bottom: 8px;
+}
+
+.doc-fact-card .fact-label {
+  font-size: 9px;
+  color: #6b7280;
+  text-transform: uppercase;
+}
+
+.doc-fact-card .fact-text {
+  font-weight: 700;
+  color: var(--ink, #17131b);
+  margin-top: 2px;
+}
+
+/* Ingest Modal */
+.ingest-modal-box {
+  background: #fff;
+  border: 3px solid var(--ink, #17131b);
+  box-shadow: 6px 6px 0 var(--ink, #17131b);
+  width: 90%;
+  max-width: 550px;
+  padding: 20px;
+}
+
+.dropzone-box {
+  border: 2px dashed var(--ink, #17131b);
+  background: #fafaf9;
+  padding: 30px 20px;
+  text-align: center;
+  cursor: pointer;
+  margin-bottom: 16px;
+  transition: background 0.15s ease;
+}
+
+.dropzone-box:hover {
+  background: #f3f4f6;
+}
+
+@media (max-width: 768px) {
+  .doc-viewer-split {
+    flex-direction: column;
+  }
+  .doc-evidence-sidebar {
+    width: 100%;
+    height: 180px;
+    border-left: none;
+    border-top: 2px solid var(--ink, #17131b);
+  }
+}

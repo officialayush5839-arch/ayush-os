@@ -1,0 +1,216 @@
+/* ============================================================
+   AYUSH.OS — 3D Effects & Animations
+   Perspective transforms, card tilts, parallax, transitions
+   ============================================================ */
+
+/* ---------- 3D Perspective Container ---------- */
+.perspective-container {
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+}
+
+/* ---------- 3D Card Tilt ---------- */
+.tilt-card {
+  transform-style: preserve-3d;
+  transition: transform var(--transition-3d);
+  will-change: transform;
+}
+.tilt-card:hover {
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg)) scale(1.02);
+}
+.tilt-card .tilt-shine {
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.15) 0%,
+    rgba(255,255,255,0) 50%,
+    rgba(0,0,0,0.05) 100%
+  );
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity var(--transition-normal);
+}
+.tilt-card:hover .tilt-shine { opacity: 1; }
+
+/* ---------- 3D Window Open ---------- */
+@keyframes windowOpen3D {
+  0% {
+    opacity: 0;
+    transform: perspective(800px) rotateX(-15deg) scale(0.8) translateY(30px);
+  }
+  60% {
+    opacity: 1;
+    transform: perspective(800px) rotateX(3deg) scale(1.02) translateY(-5px);
+  }
+  100% {
+    opacity: 1;
+    transform: perspective(800px) rotateX(0deg) scale(1) translateY(0);
+  }
+}
+.window-open-3d { animation: windowOpen3D 0.5s var(--transition-spring); }
+
+/* ---------- 3D Window Close ---------- */
+@keyframes windowClose3D {
+  0% {
+    opacity: 1;
+    transform: perspective(800px) rotateX(0deg) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: perspective(800px) rotateX(15deg) scale(0.85) translateY(30px);
+  }
+}
+.window-close-3d { animation: windowClose3D 0.35s ease forwards; }
+
+/* ---------- 3D Flip Card ---------- */
+.flip-card {
+  perspective: 1000px;
+}
+.flip-card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+  transform-style: preserve-3d;
+}
+.flip-card:hover .flip-card-inner,
+.flip-card.flipped .flip-card-inner {
+  transform: rotateY(180deg);
+}
+.flip-card-front, .flip-card-back {
+  position: absolute;
+  inset: 0;
+  backface-visibility: hidden;
+  border-radius: inherit;
+}
+.flip-card-back { transform: rotateY(180deg); }
+
+/* ---------- 3D Parallax Layers ---------- */
+.parallax-scene {
+  position: relative;
+  transform-style: preserve-3d;
+}
+.parallax-layer {
+  position: absolute;
+  inset: 0;
+  transition: transform 0.1s ease-out;
+  will-change: transform;
+}
+.parallax-layer.depth-1 { transform: translateZ(-100px) scale(1.1); }
+.parallax-layer.depth-2 { transform: translateZ(-50px) scale(1.05); }
+.parallax-layer.depth-3 { transform: translateZ(0px); }
+
+/* ---------- Hover Lift ---------- */
+.hover-lift {
+  transition: transform var(--transition-smooth), box-shadow var(--transition-smooth);
+}
+.hover-lift:hover {
+  transform: translateY(-4px) scale(1.01);
+  box-shadow: var(--shadow-lg);
+}
+
+/* ---------- Stagger Animation ---------- */
+.stagger-item {
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeInUp 0.5s ease forwards;
+}
+.stagger-item:nth-child(1) { animation-delay: 0.05s; }
+.stagger-item:nth-child(2) { animation-delay: 0.1s; }
+.stagger-item:nth-child(3) { animation-delay: 0.15s; }
+.stagger-item:nth-child(4) { animation-delay: 0.2s; }
+.stagger-item:nth-child(5) { animation-delay: 0.25s; }
+.stagger-item:nth-child(6) { animation-delay: 0.3s; }
+.stagger-item:nth-child(7) { animation-delay: 0.35s; }
+.stagger-item:nth-child(8) { animation-delay: 0.4s; }
+.stagger-item:nth-child(9) { animation-delay: 0.45s; }
+.stagger-item:nth-child(10) { animation-delay: 0.5s; }
+
+/* ---------- Ripple Effect ---------- */
+.ripple {
+  position: relative;
+  overflow: hidden;
+}
+.ripple::after {
+  content: '';
+  position: absolute;
+  width: 200%;
+  height: 200%;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%) scale(0);
+  background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+  border-radius: 50%;
+  opacity: 0;
+  transition: transform 0.5s ease, opacity 0.5s ease;
+  pointer-events: none;
+}
+.ripple:active::after {
+  transform: translate(-50%, -50%) scale(1);
+  opacity: 1;
+  transition: 0s;
+}
+
+/* ---------- Glow Pulse ---------- */
+@keyframes glowPulse {
+  0%, 100% { box-shadow: 0 0 8px var(--accent-glow); }
+  50% { box-shadow: 0 0 20px var(--accent-glow), 0 0 40px rgba(59,130,246,0.1); }
+}
+.glow-pulse { animation: glowPulse 3s ease infinite; }
+
+/* ---------- Morphing Border ---------- */
+@keyframes morphBorder {
+  0%, 100% { border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%; }
+  25% { border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%; }
+  50% { border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%; }
+  75% { border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%; }
+}
+.morph-border { animation: morphBorder 8s ease-in-out infinite; }
+
+/* ---------- Floating Elements ---------- */
+.float-slow { animation: float 6s ease-in-out infinite; }
+.float-medium { animation: float 4s ease-in-out infinite; }
+.float-fast { animation: float 3s ease-in-out infinite; }
+.float-delay-1 { animation-delay: -1s; }
+.float-delay-2 { animation-delay: -2s; }
+.float-delay-3 { animation-delay: -3s; }
+
+/* ---------- Gradient Text ---------- */
+.gradient-text {
+  background: linear-gradient(135deg, var(--accent), #a855f7, #ec4899);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+[data-theme="cyber"] .gradient-text {
+  background: linear-gradient(135deg, #00ff88, #00ccff, #ff00ff);
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* ---------- Noise Overlay ---------- */
+.noise-overlay::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  pointer-events: none;
+  opacity: 0.015;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+  background-repeat: repeat;
+  mix-blend-mode: overlay;
+}
+
+/* ---------- Vignette ---------- */
+.vignette::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, transparent 50%, rgba(0,0,0,0.3) 100%);
+}
+[data-theme="day"] .vignette::after {
+  background: radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.1) 100%);
+}

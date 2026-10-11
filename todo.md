@@ -1,0 +1,35 @@
+# Projects Application — Task List & Implementation Tracker
+
+- [x] Phase 0: Architecture, planning & codebase audit
+  - [x] Audit workspace and existing window manager
+  - [x] Create architecture.md
+  - [x] Create todo.md
+  - [x] Create AGENTS.md
+- [x] Phase 1: Backend GitHub & Image Service (`backend/`)
+  - [x] GitHub Service (`backend/githubService.js`) — GitHub App auth, public fallback, pagination, README decoder, image proxy
+  - [x] Image Service (`backend/imageService.js`) — Level 1 repo image, Level 2 README hero, Level 3 social preview, Level 4 generative/deterministic SVG fallback
+  - [x] Cache layer (`backend/cacheService.js`) — Invalidation based on pushedAt/ETag
+  - [x] Express server (`server.js`) with API endpoints: `/api/projects`, `/api/projects/:id`, `/api/projects/:id/readme`, `/api/projects/:id/image`, `/api/github/status`, `/api/github/auth`, `/api/github/callback`, `/api/github/disconnect`, `/api/projects/refresh`
+- [x] Phase 2: Secure Environment Configuration
+  - [x] Create `.env.example` with GitHub App & Image API placeholders
+  - [x] Create `.gitignore` to prevent secret/credential leaks
+  - [x] Ensure no credentials leak to frontend
+- [x] Phase 3: Frontend Projects Explorer UI (`js/apps/projects-explorer.js` & `styles/projects.css`)
+  - [x] Retro OS File Explorer interface
+  - [x] GitHub Connection Banner & Connect Modal
+  - [x] Normalized Project Cards (Cover art, real name, description, tech chips, visibility badge, updated date)
+  - [x] Search & Filters (All, Public, Private, AI/ML, Python, TypeScript, etc.)
+  - [x] OS Loading progress bar (`PROJECTS.EXE`), Error, and Empty states
+- [x] Phase 4: README Viewer & Markdown Security (`js/markdown.js`)
+  - [x] File navigation: Projects -> Project Explorer -> Project Name Click -> README View
+  - [x] Fetch `/api/projects/:id/readme`
+  - [x] Secure Markdown rendering with XSS sanitization
+  - [x] Relative image resolution to raw GitHub / authenticated proxy
+  - [x] Back button & Open GitHub external button
+- [x] Phase 5: Integration into `app.js` & `index.html`
+  - [x] Dynamic Projects Explorer mounted inside `apps.projects` in `app.js`
+  - [x] Kept all other apps (Results, Systems, Proof, Journey, etc.) completely untouched
+- [x] Phase 6: Automated Testing & Verification
+  - [x] Created test suite (`tests/projects.test.js`)
+  - [x] Ran automated tests (10 passing tests)
+  - [x] Verified zero token leakage security audit

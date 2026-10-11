@@ -1,0 +1,294 @@
+/* ============================================================
+   AYUSH.OS — Main Stylesheet
+   Premium Personal AI Operating System
+   ============================================================ */
+
+/* ---------- CSS Custom Properties & Theme System ---------- */
+:root {
+  /* Day Theme (default) */
+  --bg-primary: #f0f2f5;
+  --bg-secondary: #ffffff;
+  --bg-glass: rgba(255, 255, 255, 0.72);
+  --bg-glass-strong: rgba(255, 255, 255, 0.88);
+  --bg-dock: rgba(255, 255, 255, 0.65);
+  --bg-window: rgba(255, 255, 255, 0.92);
+  --bg-topbar: rgba(255, 255, 255, 0.7);
+  --bg-overlay: rgba(0, 0, 0, 0.4);
+
+  --text-primary: #0a0a0f;
+  --text-secondary: #4a4a5a;
+  --text-tertiary: #8a8a9a;
+  --text-inverse: #ffffff;
+
+  --accent: #3b82f6;
+  --accent-hover: #2563eb;
+  --accent-glow: rgba(59, 130, 246, 0.3);
+  --accent-soft: rgba(59, 130, 246, 0.1);
+
+  --success: #10b981;
+  --warning: #f59e0b;
+  --danger: #ef4444;
+  --info: #6366f1;
+
+  --border: rgba(0, 0, 0, 0.08);
+  --border-strong: rgba(0, 0, 0, 0.15);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.08), 0 2px 4px rgba(0,0,0,0.04);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.12), 0 4px 12px rgba(0,0,0,0.06);
+  --shadow-xl: 0 20px 60px rgba(0,0,0,0.15), 0 8px 20px rgba(0,0,0,0.08);
+  --shadow-window: 0 16px 48px rgba(0,0,0,0.18), 0 6px 16px rgba(0,0,0,0.08);
+  --shadow-dock: 0 8px 32px rgba(0,0,0,0.12), 0 2px 8px rgba(0,0,0,0.06);
+
+  --blur: 20px;
+  --blur-strong: 40px;
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+  --radius-round: 50%;
+
+  --font-sans: 'Space Grotesk', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', 'SF Mono', monospace;
+  --font-display: 'Space Grotesk', sans-serif;
+
+  --topbar-height: 36px;
+  --dock-height: 72px;
+  --dock-margin: 8px;
+
+  --transition-fast: 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-normal: 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  --transition-smooth: 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+  --transition-spring: 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+  --transition-3d: 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+}
+
+/* Night Theme */
+[data-theme="night"] {
+  --bg-primary: #0a0e1a;
+  --bg-secondary: #111827;
+  --bg-glass: rgba(17, 24, 39, 0.75);
+  --bg-glass-strong: rgba(17, 24, 39, 0.9);
+  --bg-dock: rgba(17, 24, 39, 0.7);
+  --bg-window: rgba(17, 24, 39, 0.92);
+  --bg-topbar: rgba(17, 24, 39, 0.75);
+  --bg-overlay: rgba(0, 0, 0, 0.6);
+
+  --text-primary: #f0f2f5;
+  --text-secondary: #a0a4b8;
+  --text-tertiary: #6b7280;
+  --text-inverse: #0a0a0f;
+
+  --accent: #60a5fa;
+  --accent-hover: #93bbfd;
+  --accent-glow: rgba(96, 165, 250, 0.3);
+  --accent-soft: rgba(96, 165, 250, 0.1);
+
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.15);
+  --shadow-sm: 0 1px 3px rgba(0,0,0,0.2);
+  --shadow-md: 0 4px 12px rgba(0,0,0,0.3);
+  --shadow-lg: 0 12px 40px rgba(0,0,0,0.4);
+  --shadow-xl: 0 20px 60px rgba(0,0,0,0.5);
+  --shadow-window: 0 16px 48px rgba(0,0,0,0.5);
+  --shadow-dock: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+/* Cyber Theme */
+[data-theme="cyber"] {
+  --bg-primary: #050510;
+  --bg-secondary: #0a0a1f;
+  --bg-glass: rgba(10, 10, 31, 0.8);
+  --bg-glass-strong: rgba(10, 10, 31, 0.92);
+  --bg-dock: rgba(10, 10, 31, 0.75);
+  --bg-window: rgba(10, 10, 31, 0.94);
+  --bg-topbar: rgba(10, 10, 31, 0.8);
+  --bg-overlay: rgba(0, 0, 0, 0.7);
+
+  --text-primary: #e0ffe0;
+  --text-secondary: #80ff80;
+  --text-tertiary: #40aa40;
+  --text-inverse: #050510;
+
+  --accent: #00ff88;
+  --accent-hover: #33ffaa;
+  --accent-glow: rgba(0, 255, 136, 0.3);
+  --accent-soft: rgba(0, 255, 136, 0.08);
+
+  --border: rgba(0, 255, 136, 0.1);
+  --border-strong: rgba(0, 255, 136, 0.2);
+  --shadow-sm: 0 1px 3px rgba(0,255,136,0.05);
+  --shadow-md: 0 4px 12px rgba(0,255,136,0.08);
+  --shadow-lg: 0 12px 40px rgba(0,255,136,0.1);
+  --shadow-xl: 0 20px 60px rgba(0,255,136,0.12);
+  --shadow-window: 0 16px 48px rgba(0,0,0,0.5), 0 0 30px rgba(0,255,136,0.08);
+  --shadow-dock: 0 8px 32px rgba(0,0,0,0.5), 0 0 20px rgba(0,255,136,0.06);
+}
+
+/* ---------- Reset & Base ---------- */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html {
+  font-size: 16px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+  overflow: hidden;
+  height: 100%;
+  width: 100%;
+}
+
+body {
+  font-family: var(--font-sans);
+  color: var(--text-primary);
+  background: var(--bg-primary);
+  overflow: hidden;
+  height: 100vh;
+  width: 100vw;
+  position: relative;
+  line-height: 1.5;
+  cursor: default;
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { color: var(--accent-hover); }
+
+button {
+  font-family: inherit;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: inherit;
+  font-size: inherit;
+}
+
+img { display: block; max-width: 100%; }
+
+/* ---------- Scrollbar ---------- */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--text-tertiary); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--text-secondary); }
+
+/* ---------- Typography ---------- */
+.font-mono { font-family: var(--font-mono); }
+.font-display { font-family: var(--font-display); }
+.text-xs { font-size: 0.6875rem; line-height: 1.4; }
+.text-sm { font-size: 0.8125rem; line-height: 1.5; }
+.text-base { font-size: 0.9375rem; line-height: 1.6; }
+.text-lg { font-size: 1.125rem; }
+.text-xl { font-size: 1.5rem; }
+.text-2xl { font-size: 2rem; }
+.text-3xl { font-size: 2.5rem; }
+.text-4xl { font-size: 3.5rem; }
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+}
+
+/* ---------- Glass ---------- */
+.glass {
+  background: var(--bg-glass);
+  backdrop-filter: blur(var(--blur));
+  -webkit-backdrop-filter: blur(var(--blur));
+  border: 1px solid var(--border);
+}
+.glass-strong {
+  background: var(--bg-glass-strong);
+  backdrop-filter: blur(var(--blur-strong));
+  -webkit-backdrop-filter: blur(var(--blur-strong));
+  border: 1px solid var(--border-strong);
+}
+
+/* ---------- Buttons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 16px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  font-family: var(--font-mono);
+  letter-spacing: 0.03em;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-fast);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+.btn-primary { background: var(--accent); color: var(--text-inverse); box-shadow: var(--shadow-sm); }
+.btn-primary:hover { background: var(--accent-hover); box-shadow: var(--shadow-md); transform: translateY(-1px); }
+.btn-outline { background: transparent; color: var(--accent); border: 1px solid var(--accent); }
+.btn-outline:hover { background: var(--accent-soft); transform: translateY(-1px); }
+.btn-ghost { background: transparent; color: var(--text-secondary); }
+.btn-ghost:hover { background: var(--accent-soft); color: var(--accent); }
+
+/* ---------- Badge ---------- */
+.badge {
+  display: inline-flex; align-items: center; padding: 2px 8px;
+  font-family: var(--font-mono); font-size: 0.625rem; font-weight: 600;
+  letter-spacing: 0.08em; text-transform: uppercase; border-radius: 4px;
+  background: var(--accent-soft); color: var(--accent);
+}
+.badge-success { background: rgba(16,185,129,0.1); color: var(--success); }
+.badge-warning { background: rgba(245,158,11,0.1); color: var(--warning); }
+.badge-danger { background: rgba(239,68,68,0.1); color: var(--danger); }
+
+/* ---------- Animations ---------- */
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes fadeInUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeInDown { from { opacity: 0; transform: translateY(-20px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes scaleIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
+@keyframes slideInUp { from { transform: translateY(100%); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+@keyframes shimmer { 0% { background-position: -200% 0; } 100% { background-position: 200% 0; } }
+@keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+@keyframes bounce { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-12px); } 60% { transform: translateY(-6px); } }
+@keyframes wiggle { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(-5deg); } 75% { transform: rotate(5deg); } }
+@keyframes breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+@keyframes cloudDrift { 0% { transform: translateX(-10%) translateY(0); } 50% { transform: translateX(10%) translateY(-8px); } 100% { transform: translateX(-10%) translateY(0); } }
+@keyframes sparkle { 0%, 100% { opacity: 0.2; transform: scale(0.8); } 50% { opacity: 1; transform: scale(1.2); } }
+@keyframes wave { 0% { transform: rotate(0deg); } 10% { transform: rotate(14deg); } 20% { transform: rotate(-8deg); } 30% { transform: rotate(14deg); } 40% { transform: rotate(-4deg); } 50% { transform: rotate(10deg); } 60%,100% { transform: rotate(0deg); } }
+
+/* ---------- Boot Screen ---------- */
+#bootScreen {
+  position: fixed; inset: 0; z-index: 10000;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  background: #050510; color: #e0ffe0;
+  transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+#bootScreen.hidden { opacity: 0; visibility: hidden; pointer-events: none; }
+.boot-logo { font-family: var(--font-display); font-size: 3rem; font-weight: 700; letter-spacing: 0.05em; margin-bottom: 8px; }
+.boot-logo span { color: #00ff88; }
+.boot-sub { font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: #80ff80; margin-bottom: 32px; }
+.boot-progress { width: 240px; height: 3px; background: rgba(255,255,255,0.08); border-radius: 2px; overflow: hidden; margin-bottom: 24px; }
+.boot-progress-bar { height: 100%; width: 0%; background: linear-gradient(90deg, #00ff88, #60a5fa); border-radius: 2px; transition: width 0.3s ease; }
+.boot-checks { display: flex; flex-direction: column; gap: 6px; font-family: var(--font-mono); font-size: 0.6875rem; letter-spacing: 0.05em; }
+.boot-check { opacity: 0; transition: opacity 0.3s ease; color: #6b7280; }
+.boot-check.active { color: #80ff80; opacity: 1; }
+.boot-check b { color: #00ff88; margin-left: 8px; }
+.boot-skip {
+  position: absolute; bottom: 32px; font-family: var(--font-mono); font-size: 0.6875rem;
+  color: #4a4a5a; letter-spacing: 0.1em; text-transform: uppercase; background: none;
+  border: 1px solid rgba(255,255,255,0.1); padding: 6px 16px; border-radius: 4px;
+  cursor: pointer; transition: all var(--transition-fast);
+}
+.boot-skip:hover { color: #00ff88; border-color: #00ff88; }
+
+/* ---------- Reduced Motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+
+/* ---------- Mobile ---------- */
+@media (max-width: 768px) {
+  :root { --topbar-height: 32px; --dock-height: 64px; }
+  .text-4xl { font-size: 2rem; }
+  .text-3xl { font-size: 1.75rem; }
+  .text-2xl { font-size: 1.5rem; }
+}

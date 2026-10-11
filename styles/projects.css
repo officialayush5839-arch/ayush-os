@@ -1,0 +1,631 @@
+/* ============================================================
+   AYUSH.OS — Projects App (Dynamic GitHub Source of Truth)
+   Retro OS-Style File Explorer & README Viewer
+   ============================================================ */
+
+.projects-explorer-app {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 520px;
+  background: var(--paper, #f7f3eb);
+  color: var(--ink, #17131b);
+  font-family: var(--mono, 'DM Mono', monospace);
+  padding: 0;
+  overflow: hidden;
+  position: relative;
+}
+
+/* ---------- Top OS Toolbar ---------- */
+.projects-os-toolbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: rgba(0, 0, 0, 0.04);
+  border-bottom: 2px solid var(--ink, #17131b);
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.projects-breadcrumb {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font: 9px/1.2 var(--pixel, monospace);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.projects-breadcrumb .bc-btn {
+  background: none;
+  border: none;
+  padding: 2px 4px;
+  cursor: pointer;
+  color: var(--ink, #17131b);
+  font: inherit;
+  font-weight: 700;
+  border-radius: 2px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.projects-breadcrumb .bc-btn:hover {
+  background: var(--wine, #851c3d);
+  color: #fff;
+}
+
+.projects-breadcrumb .bc-sep {
+  opacity: 0.4;
+}
+
+.projects-breadcrumb .bc-current {
+  color: var(--wine, #851c3d);
+  font-weight: 700;
+  max-width: 220px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* GitHub Status Indicator */
+.gh-status-indicator {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 8px;
+  border: 1.5px solid var(--ink, #17131b);
+  background: #fff;
+  border-radius: 3px;
+  font: 8px/1 var(--pixel, monospace);
+  text-transform: uppercase;
+  box-shadow: 2px 2px 0 var(--ink, #17131b);
+}
+
+.gh-status-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: #9ca3af;
+  display: inline-block;
+}
+
+.gh-status-dot.connected {
+  background: #10b981;
+  box-shadow: 0 0 6px rgba(16, 185, 129, 0.6);
+}
+
+.gh-status-dot.disconnected {
+  background: #f59e0b;
+}
+
+.gh-action-btn {
+  background: var(--paper-2, #fff);
+  border: 1.5px solid var(--ink, #17131b);
+  padding: 3px 7px;
+  font: 8px/1 var(--pixel, monospace);
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 2px 2px 0 var(--ink, #17131b);
+  transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+.gh-action-btn:hover {
+  transform: translate(-1px, -1px);
+  box-shadow: 3px 3px 0 var(--ink, #17131b);
+  background: var(--yellow, #ffd95a);
+}
+
+.gh-action-btn:active {
+  transform: translate(1px, 1px);
+  box-shadow: 1px 1px 0 var(--ink, #17131b);
+}
+
+/* ---------- Search & Filter Bar ---------- */
+.projects-filter-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  border-bottom: 2px solid var(--ink, #17131b);
+  background: #fff;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.projects-search-box {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 180px;
+  max-width: 320px;
+  border: 2px solid var(--ink, #17131b);
+  background: var(--paper, #f7f3eb);
+  padding: 4px 8px;
+  box-shadow: inset 2px 2px 0 rgba(0, 0, 0, 0.08);
+}
+
+.projects-search-box span {
+  font: 10px/1 var(--pixel, monospace);
+  margin-right: 6px;
+  opacity: 0.6;
+}
+
+.projects-search-input {
+  width: 100%;
+  border: none;
+  background: transparent;
+  outline: none;
+  font: 11px/1.3 var(--mono, monospace);
+  color: var(--ink, #17131b);
+}
+
+.projects-chips {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+  max-width: 100%;
+}
+
+.chip-btn {
+  padding: 4px 8px;
+  border: 1.5px solid var(--ink, #17131b);
+  background: var(--paper, #f7f3eb);
+  font: 8px/1 var(--pixel, monospace);
+  text-transform: uppercase;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all 0.12s ease;
+}
+
+.chip-btn:hover {
+  background: var(--paper-2, #fff);
+}
+
+.chip-btn.active {
+  background: var(--wine, #851c3d);
+  color: #fff;
+  border-color: var(--wine, #851c3d);
+  box-shadow: 2px 2px 0 var(--ink, #17131b);
+}
+
+/* ---------- Project Grid / Explorer View ---------- */
+.projects-scroll-area {
+  flex: 1;
+  overflow-y: auto;
+  padding: 16px;
+}
+
+.projects-dynamic-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+/* Individual Project Card (OS File Artifact) */
+.project-os-card {
+  display: flex;
+  flex-direction: column;
+  background: #fff;
+  border: 2px solid var(--ink, #17131b);
+  box-shadow: 4px 4px 0 var(--ink, #17131b);
+  transition: transform 0.14s ease, box-shadow 0.14s ease;
+  cursor: pointer;
+  overflow: hidden;
+  position: relative;
+}
+
+.project-os-card:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: 7px 7px 0 var(--ink, #17131b);
+}
+
+.project-card-cover {
+  width: 100%;
+  height: 140px;
+  background: #0f172a;
+  border-bottom: 2px solid var(--ink, #17131b);
+  position: relative;
+  overflow: hidden;
+}
+
+.project-card-cover img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+  display: block;
+}
+
+.project-card-badges {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  display: flex;
+  gap: 5px;
+}
+
+.badge-tag {
+  font: 7px/1 var(--pixel, monospace);
+  padding: 3px 6px;
+  border: 1px solid #17131b;
+  text-transform: uppercase;
+  box-shadow: 1px 1px 0 rgba(0, 0, 0, 0.2);
+}
+
+.badge-tag.badge-public {
+  background: #10b981;
+  color: #fff;
+}
+
+.badge-tag.badge-private {
+  background: #f59e0b;
+  color: #000;
+  font-weight: 700;
+}
+
+.project-card-info {
+  padding: 12px;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+}
+
+.project-card-name {
+  font: 18px/1.1 var(--serif, 'Instrument Serif', Georgia, serif);
+  font-weight: 700;
+  margin: 0 0 6px;
+  color: var(--ink, #17131b);
+  word-break: break-word;
+}
+
+.project-card-desc {
+  font: 11px/1.45 var(--mono, monospace);
+  color: #4b5563;
+  margin: 0 0 12px;
+  flex: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.project-card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-top: 1px dashed rgba(0, 0, 0, 0.15);
+  padding-top: 8px;
+  font: 8px/1 var(--pixel, monospace);
+  text-transform: uppercase;
+}
+
+.project-tech-meta {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #6b7280;
+}
+
+.tech-dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  display: inline-block;
+  background: var(--wine, #851c3d);
+}
+
+.project-open-hint {
+  color: var(--wine, #851c3d);
+  font-weight: 700;
+}
+
+/* ---------- README Viewer Window / Panel ---------- */
+.readme-viewer-panel {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow: hidden;
+  background: #fff;
+}
+
+.readme-header-banner {
+  padding: 16px 20px;
+  background: var(--paper, #f7f3eb);
+  border-bottom: 2px solid var(--ink, #17131b);
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.readme-title-group h2 {
+  font: 26px/1 var(--serif, 'Instrument Serif', Georgia, serif);
+  margin: 0 0 6px;
+  color: var(--ink, #17131b);
+}
+
+.readme-title-group p {
+  font: 11px/1.4 var(--mono, monospace);
+  color: #4b5563;
+  margin: 0 0 10px;
+  max-width: 600px;
+}
+
+.readme-meta-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.meta-pill {
+  padding: 4px 8px;
+  background: #fff;
+  border: 1.5px solid var(--ink, #17131b);
+  font: 8px/1 var(--pixel, monospace);
+  box-shadow: 2px 2px 0 var(--ink, #17131b);
+}
+
+.readme-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.readme-scroll-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px;
+}
+
+/* Markdown Rendering Inside README */
+.markdown-body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  color: #24292f;
+  max-width: 860px;
+  margin: 0 auto;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3,
+.markdown-body h4 {
+  margin-top: 24px;
+  margin-bottom: 16px;
+  font-weight: 600;
+  line-height: 1.25;
+  border-bottom: 1px solid #d0d7de;
+  padding-bottom: 0.3em;
+}
+
+.markdown-body h1 { font-size: 1.8em; }
+.markdown-body h2 { font-size: 1.4em; }
+.markdown-body h3 { font-size: 1.2em; }
+
+.markdown-body p { margin-bottom: 16px; }
+
+.markdown-body code {
+  padding: 0.2em 0.4em;
+  background-color: rgba(175, 184, 193, 0.2);
+  border-radius: 4px;
+  font-family: 'JetBrains Mono', 'DM Mono', monospace;
+  font-size: 85%;
+}
+
+.markdown-body pre {
+  padding: 16px;
+  overflow: auto;
+  font-size: 85%;
+  line-height: 1.45;
+  background-color: #1e293b;
+  color: #f8fafc;
+  border-radius: 6px;
+  margin-bottom: 16px;
+  border: 2px solid var(--ink, #17131b);
+  box-shadow: 4px 4px 0 var(--ink, #17131b);
+}
+
+.markdown-body pre code {
+  background-color: transparent;
+  padding: 0;
+  color: inherit;
+}
+
+.markdown-body table {
+  border-collapse: collapse;
+  width: 100%;
+  margin-bottom: 16px;
+  display: block;
+  overflow-x: auto;
+}
+
+.markdown-body table th,
+.markdown-body table td {
+  padding: 6px 13px;
+  border: 1px solid #d0d7de;
+}
+
+.markdown-body table tr:nth-child(2n) {
+  background-color: #f6f8fa;
+}
+
+.markdown-body img {
+  max-width: 100%;
+  box-sizing: border-box;
+  vertical-align: middle;
+}
+
+.markdown-body a img {
+  border: none;
+  box-shadow: none;
+  margin: 2px 2px;
+  display: inline-block;
+}
+
+.markdown-body img[src*="shields.io"],
+.markdown-body img[src*="badge"] {
+  border: none !important;
+  box-shadow: none !important;
+  display: inline-block !important;
+  margin: 3px 2px !important;
+}
+
+.markdown-body p:has(> a > img),
+.markdown-body div[align="center"] {
+  text-align: center;
+}
+
+.markdown-body blockquote {
+  padding: 0 1em;
+  color: #57606a;
+  border-left: 0.25em solid #d0d7de;
+  margin: 0 0 16px 0;
+}
+
+.markdown-body a {
+  color: var(--wine, #851c3d);
+  text-decoration: underline;
+}
+
+/* ---------- Loading Progress Bar (PROJECTS.EXE) ---------- */
+.projects-loading-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  text-align: center;
+}
+
+.projects-loading-icon {
+  font-size: 32px;
+  margin-bottom: 12px;
+  animation: floatBounce 1.5s ease-in-out infinite;
+}
+
+.projects-loading-title {
+  font: 11px/1.2 var(--pixel, monospace);
+  font-weight: 700;
+  margin-bottom: 8px;
+  letter-spacing: 1px;
+}
+
+.projects-loading-sub {
+  font: 11px/1.4 var(--mono, monospace);
+  color: #6b7280;
+  margin-bottom: 18px;
+}
+
+.projects-progress-track {
+  width: 280px;
+  height: 14px;
+  border: 2px solid var(--ink, #17131b);
+  background: #fff;
+  padding: 2px;
+  box-shadow: 3px 3px 0 var(--ink, #17131b);
+}
+
+.projects-progress-fill {
+  height: 100%;
+  background: repeating-linear-gradient(
+    45deg,
+    var(--wine, #851c3d),
+    var(--wine, #851c3d) 8px,
+    #991b1b 8px,
+    #991b1b 16px
+  );
+  width: 60%;
+  animation: progressAnim 1.4s ease-in-out infinite;
+}
+
+@keyframes progressAnim {
+  0% { width: 10%; }
+  50% { width: 85%; }
+  100% { width: 100%; }
+}
+
+@keyframes floatBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-8px); }
+}
+
+/* ---------- Connect GitHub OS Banner / Card ---------- */
+.gh-connect-modal {
+  background: #fff;
+  border: 2px solid var(--ink, #17131b);
+  box-shadow: 6px 6px 0 var(--ink, #17131b);
+  padding: 24px;
+  max-width: 460px;
+  margin: 30px auto;
+  text-align: center;
+}
+
+.gh-connect-modal h3 {
+  font: 12px/1.3 var(--pixel, monospace);
+  text-transform: uppercase;
+  margin: 0 0 10px;
+}
+
+.gh-connect-modal p {
+  font: 11px/1.5 var(--mono, monospace);
+  color: #4b5563;
+  margin: 0 0 18px;
+}
+
+.gh-connect-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: var(--ink, #17131b);
+  color: #fff;
+  border: 2px solid var(--ink, #17131b);
+  font: 10px/1 var(--pixel, monospace);
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--wine, #851c3d);
+  transition: transform 0.12s ease;
+  text-decoration: none;
+}
+
+.gh-connect-btn:hover {
+  transform: translate(-2px, -2px);
+  background: var(--wine, #851c3d);
+  box-shadow: 6px 6px 0 var(--ink, #17131b);
+  color: #fff;
+}
+
+/* ---------- Error & Empty States ---------- */
+.projects-error-box,
+.projects-empty-box {
+  background: #fff;
+  border: 2px solid var(--ink, #17131b);
+  box-shadow: 4px 4px 0 var(--ink, #17131b);
+  padding: 24px;
+  text-align: center;
+  max-width: 480px;
+  margin: 40px auto;
+}
+
+.projects-error-box h4,
+.projects-empty-box h4 {
+  font: 11px/1.3 var(--pixel, monospace);
+  color: #dc2626;
+  margin: 0 0 8px;
+}
+
+.projects-empty-box h4 {
+  color: var(--ink, #17131b);
+}
+
+.projects-error-box p,
+.projects-empty-box p {
+  font: 11px/1.4 var(--mono, monospace);
+  color: #4b5563;
+  margin: 0 0 16px;
+}

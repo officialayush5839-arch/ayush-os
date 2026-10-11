@@ -1,0 +1,27 @@
+<svg viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <!-- Top Document peeking out -->
+  <rect x="70" y="44" width="80" height="40" rx="4" fill="#fff8dc" stroke="#17131b" stroke-width="10" stroke-linejoin="round"/>
+  <line x1="86" y1="58" x2="134" y2="58" stroke="#17131b" stroke-width="6" stroke-linecap="round"/>
+  <line x1="86" y1="68" x2="120" y2="68" stroke="#17131b" stroke-width="6" stroke-linecap="round"/>
+
+  <!-- Briefcase Handle -->
+  <path d="M96 68 L96 40 C96 32 104 26 112 26 L144 26 C152 26 160 32 160 40 L160 68" fill="none" stroke="#17131b" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+
+  <!-- Briefcase Main Body -->
+  <rect x="28" y="68" width="200" height="152" rx="14" fill="#a8d7e8" stroke="#17131b" stroke-width="12" stroke-linejoin="round"/>
+
+  <!-- Lower Pocket / Divider -->
+  <path d="M28 136 L94 136 C98 136 102 140 104 144 L114 164 C116 168 122 172 128 172 C134 172 140 168 142 164 L152 144 C154 140 158 136 162 136 L228 136" fill="#88c3d6" stroke="#17131b" stroke-width="10" stroke-linejoin="round"/>
+
+  <!-- Gold Brass Lock / Clasp -->
+  <rect x="112" y="124" width="32" height="30" rx="6" fill="#ffd95a" stroke="#17131b" stroke-width="8" stroke-linejoin="round"/>
+  <circle cx="128" cy="139" r="4" fill="#17131b"/>
+
+  <!-- Side Leather Straps -->
+  <line x1="64" y1="68" x2="64" y2="220" stroke="#17131b" stroke-width="8" stroke-dasharray="10 6"/>
+  <line x1="192" y1="68" x2="192" y2="220" stroke="#17131b" stroke-width="8" stroke-dasharray="10 6"/>
+
+  <!-- Verified Badge -->
+  <circle cx="188" cy="178" r="24" fill="#15803d" stroke="#17131b" stroke-width="7"/>
+  <path d="M178 178 L185 186 L200 170" fill="none" stroke="#fff" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>
